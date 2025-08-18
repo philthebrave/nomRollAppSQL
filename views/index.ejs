@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MySQL Data</title>
+    <style>
+        body {
+            background-color: #B5BF79;
+            font-family: Arial;
+            text-align: center;
+        }
+        table {
+            width: 80%;
+            border-collapse: collapse;
+            margin: 20px auto;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<!-- ------------------------------------------------- -->
+<body>
+
+    <form action="/" method="POST">
+    <h1>Add New Person</h1>
+    <table>
+            <thead>
+                <tr>
+                    <th><label for="service_number">Service Number:</label></th>
+                    <th><label for="grade">Grade:</label></th>
+                    <th><label for="name">Name:</label></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><input type="text" name="service_number" required></td>
+                    <td><input type="text" name="grade" required></td>
+                    <td><input type="text" name="name" required></td>
+                </tr>
+            </tbody>
+    </table>
+    <!-- <div>
+            <label for="service_number">Service Number:</label>
+            <input type="text" id="service_number" name="service_number" required>
+        </div>
+        <div>
+            <label for="grade">Grade:</label>
+            <input type="text" id="grade" name="grade" required>
+        </div>
+        <div>
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required>
+        </div> -->
+    <button type="submit">Add Person</button>
+    </form>
+
+<!-- ------------------------------------------------- -->
+    <h1>Data from MySQL Personnel Table</h1>
+    <% if (data && data.length > 0) { %>
+        <table>
+            <thead>
+                <tr>
+                    <% Object.keys(data[0]).forEach(key => { %>
+                        <th><%= key %></th>
+                    <% }); %>
+                    <th>Edit</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% data.forEach(row => { %>
+                    <tr>
+                        <% Object.values(row).forEach(value => { %>
+                            <td><%= value %></td>
+                        <% }); %>
+                        <td><button>Edit</button></td>
+                        <td><button>Delete</button></td>
+                    </tr>
+                <% }); %>
+            </tbody>
+        </table>
+    <% } else { %>
+        <p>No data found in the table.</p>
+    <% } %>
+</body>
+</html>
