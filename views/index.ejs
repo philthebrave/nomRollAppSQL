@@ -80,7 +80,9 @@
                         <% Object.values(row).forEach(value => { %>
                             <td><%= value %></td>
                         <% }); %>
-                        <td><button>Edit</button></td>
+                <!-- ------------------------------------------------- -->                        
+                        <td><button onclick="window.location='/<%= Object.values(row)[0] %>/edit';">Edit</button></td>
+                <!-- ------------------------------------------------- -->                        
                         <td><button>Delete</button></td>
                     </tr>
                 <% }); %>

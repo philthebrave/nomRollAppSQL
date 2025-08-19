@@ -91,6 +91,8 @@ const path = require('path');
 const app = express();
 const port = 3000;
 const bodyParser = require('body-parser'); // To parse form data
+const methodOverride = require('method-override'); // For PUT/DELETE from forms
+
 
 // Configure MySQL connection (replace with your Avien MySQL details)
 const dbConfig = {
@@ -102,12 +104,24 @@ const dbConfig = {
 };
 
 const pool = mysql2.createPool(dbConfig);
+// const urlstring = res.locals.currentUrl;
 
 // Set EJS as the view engine
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.json());
+// app.use(express.urlencoded({ extended: true }));
+app.use(methodOverride('_method')); // Use method-override middleware
+
+// Code below allows ejs scripts to reference their own URL (important for edit pages)
+app.use((req, res, next) => {
+    res.locals.currentUrl = req.originalUrl; // Full URL path including query string
+    res.locals.currentHost = req.get('host'); // Hostname and port
+    res.locals.currentProtocol = req.protocol; // http or https
+    next();
+});
 
 // Route to fetch and display data
 app.get('/', (req, res) => {
@@ -117,6 +131,8 @@ app.get('/', (req, res) => {
             return res.status(500).send('Error fetching data from database.');
         }
         res.render('index', { data: results }); // Pass fetched data to EJS template
+        // console.log("URL is:")
+        // console.log(res.locals.currentUrl)
     });
 });
 
@@ -124,22 +140,59 @@ app.post('/', (req, res) => {
     const { service_number, grade, name } = req.body; // Extract data from the form
 
     // Basic validation (add more robust validation as needed)
-    if (!service_number || !grade || !name) {
-        return res.send('All fields are required.');
-    }
+    // if (!service_number || !grade || !name) {
+    //     return res.send('All fields are required.');
+    // }
 
     const query = 'INSERT INTO personnel VALUES (?, ?, ?)';
     pool.query(query, [service_number, grade, name], (err, result) => {
         if (err) {
             console.error('Error inserting person:', err);
-            return res.send('Error adding person.');
+            return res.send('POST Error adding person.');
         }
         console.log('person added successfully:', result.insertId);
         res.redirect('/'); // Redirect to a page displaying all people
     });
 });
 
+// Route to edit page
+app.get('/:id/edit', (req, res) => {
+    pool.query('SELECT * FROM personnel', (error, results) => { // Replace 'your_table_name'
+        if (error) {
+            console.error('Error fetching data:', error);
+            return res.status(500).send('Error fetching data from database.');
+        }
+        res.render('edit', { data: results, urlstring: Number(res.locals.currentUrl.substr(1,8)) }); // Pass fetched data to EJS template
+        // console.log("urlstring is:")
+        // console.log(Number(res.locals.currentUrl.substr(1,8)))
+        // console.log("row[0] is:")
+        // console.log(results[0].service_number)
+    });
+});
 
+// Route for edit page POST
+app.put('/:id/edit', (req, res) => {
+    const service_number = req.params.id;
+    const { grade, name } = req.body;
+    console.log(service_number)
+    console.log({ grade, name })
+    // const { service_number, grade, name } = req.body;
+
+    // Basic validation (add more robust validation as needed)
+    // if (!service_number || !grade || !name) {
+    //     return res.send('All fields are required.');
+    // }
+
+    const query = 'UPDATE personnel SET grade = ?, name = ? WHERE service_number = ?';
+    pool.query(query, [grade, name, service_number], (err, result) => {
+        if (err) {
+            console.error('PUT Error inserting person:', err);
+            return res.send('Error adding person.');
+        }
+        console.log('person added successfully:', result.insertId);
+        res.redirect('/'); // Redirect to a page displaying all people
+    });
+});
 
 // Start the server
 app.listen(port, () => {
