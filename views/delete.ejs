@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MySQL Data</title>
+    <style>
+        body {
+            background-color: #B5BF79;
+            font-family: Arial;
+            text-align: center;
+        }
+        table {
+            width: 80%;
+            border-collapse: collapse;
+            margin: 20px auto;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<!-- ------------------------------------------------- -->
+<body>
+        <h1>Are you sure you want to delete the person below?</h1>
+        <%= data[0].grade + " " + data[0].name %>
+        <br><br>
+        <form method="POST" action="/<%= data[0].service_number %>?_method=DELETE">
+            <button type="submit">DELETE</button>
+        </form>
+        <br>
+        <form action="/">
+            <td><button>CANCEL</button></td>
+        </form>        
+<!-- Object.keys(data[0]).key -->
+ </body>
+</html>

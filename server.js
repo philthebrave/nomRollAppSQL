@@ -131,6 +131,7 @@ app.get('/', (req, res) => {
             return res.status(500).send('Error fetching data from database.');
         }
         res.render('index', { data: results }); // Pass fetched data to EJS template
+        // console.log(results)
         // console.log("re.params:")
         // console.log(req.params)
         // console.log("re.body:")
@@ -198,26 +199,50 @@ app.put('/:id/edit', (req, res) => {
     });
 });
 
-// Route to deleted page
-// app.get('/:id/deleted', (req, res) => {
-    
-//         if (error) {
-//             console.error('Error rendering deleted:', error);
-//             return res.status(500).send('Error rendering deleted.');
-//         }
-//         res.render('/:id/deleted');
-//         // console.log("urlstring is:")
-//         // console.log(Number(res.locals.currentUrl.substr(1,8)))
-//         // console.log("row[0] is:")
-//         // console.log(results[0].service_number)
+// Route to ARE YOU SURE delete page
+app.get('/:id/delete', (req, res) => {
+    const service_number = req.params.id;
+    pool.query('SELECT * FROM personnel WHERE service_number = ?', [service_number], (error, results) => { // Replace 'your_table_name'
+        if (error) {
+            console.error('Error fetching data:', error);
+            return res.status(500).send('Error fetching data from database.');
+        }
+        res.render('delete', { data: results, urlstring: Number(res.locals.currentUrl.substr(1,8)) }); // Pass fetched data to EJS template
+        // console.log("re.params:")
+        // console.log(req.params)
+        // console.log("re.body:")
+        // console.log(req.body)
+        // console.log("urlstring is:")
+        // console.log(Number(res.locals.currentUrl.substr(1,8)))
+        // console.log("row[0] is:")
+        // console.log(results[0].service_number)
+    });
+});
 
+// Route for secondary delete page POST
+// app.delete('/:id/delete', (req, res) => {
+//     const service_number = req.params.id;
+//     console.log(service_number)
+
+//     // Basic validation (add more robust validation as needed)
+//     // if (!service_number || !grade || !name) {
+//     //     return res.send('All fields are required.');
+//     // }
+
+//     const query = 'DELETE FROM personnel WHERE service_number = ?';
+//     pool.query(query, [service_number], (err, result) => {
+//         if (err) {
+//             console.error('DELETE Error deleting person:', err);
+//             return res.send('Error deleting person.');
+//         }
+//         console.log(service_number)
+//         console.log('person deleted successfully:', result.insertId);
+//         res.redirect('/');
+//     });
 // });
 
 // Route for delete page POST
 app.delete('/:id', (req, res) => {
-    // const service_number = req.params.id;
-    // console.log("res.locals:")
-    // console.log(res.locals)
     const service_number = req.params.id;
     console.log(service_number)
 
