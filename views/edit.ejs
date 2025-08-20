@@ -48,16 +48,20 @@
                 <% if (urlstring === row.service_number) { %>
                 <!-- HTML or EJS code to be rendered if the condition is true -->
                     <!-- <form action="/" method="PUT"> -->
-                    <form action="/<%= row.service_number %>/edit?_method=PUT" method="POST">
+                    
 
                     <tr>
-                        <td><%=row.service_number%></td>
-                        <td><input style="text-align: center;" type="text" name="grade" value="<%=row.grade%>" required></td>
-                        <td><input style="text-align: center;" type="text" name="name" value="<%=row.name%>" required></td>
-                        <td><button type="submit">ACCEPT</button></td>
-                        <td><button>CANCEL</button></td>
+                        <form action="/<%= row.service_number %>/edit?_method=PUT" method="POST">
+                            <td><%=row.service_number%></td>
+                            <td><input style="text-align: center;" type="text" name="grade" value="<%=row.grade%>" required></td>
+                            <td><input style="text-align: center;" type="text" name="name" value="<%=row.name%>" required></td>
+                            <td><button type="submit">ACCEPT</button></td>
+                        </form>
+                        <form action="/">
+                            <td><button>CANCEL</button></td>
+                        </form>
                     </tr>
-                    </form>
+                    
                 <% } else { %>
                 <!-- ------------------------------------------------- -->
                     <tr>

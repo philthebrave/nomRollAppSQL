@@ -83,7 +83,9 @@
                 <!-- ------------------------------------------------- -->                        
                         <td><button onclick="window.location='/<%= Object.values(row)[0] %>/edit';">Edit</button></td>
                 <!-- ------------------------------------------------- -->                        
-                        <td><button>Delete</button></td>
+                        <form method="POST" action="/<%= row.service_number %>?_method=DELETE">
+                            <td><button type="submit">Delete</button></td>
+                        </form>
                     </tr>
                 <% }); %>
             </tbody>
