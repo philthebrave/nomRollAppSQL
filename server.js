@@ -100,7 +100,11 @@ const dbConfig = {
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_DATABASE,
-    port: 13490
+    port: 13490,
+    ssl: {
+    rejectUnauthorized: true,
+    ca: process.env.DB_SSL_CA // Keep this as process.env! Do not paste the actual text here.
+    }
 };
 
 const pool = mysql2.createPool(dbConfig);
