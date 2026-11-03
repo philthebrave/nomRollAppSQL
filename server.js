@@ -164,44 +164,81 @@ app.post('/', (req, res) => {
     });
 });
 
-// Route to edit page
+// Route to edit page (Fetches only the specific record by ID)
 app.get('/:id/edit', (req, res) => {
-    pool.query('SELECT * FROM personnel WHERE service_number = ?', (error, results) => { // Replace 'your_table_name'
+    const personId = req.params.id;
+    const query = 'SELECT * FROM personnel WHERE service_number = ?';
+    
+    pool.query(query, [personId], (error, results) => {
         if (error) {
             console.error('Error fetching data:', error);
             return res.status(500).send('Error fetching data from database.');
         }
-        res.render('edit', { data: results, urlstring: Number(res.locals.currentUrl.substr(1,8)) }); // Pass fetched data to EJS template
-        // console.log("urlstring is:")
-        // console.log(Number(res.locals.currentUrl.substr(1,8)))
-        // console.log("row[0] is:")
-        // console.log(results[0].service_number)
+        
+        // Check if the record actually exists
+        if (results.length === 0) {
+            return res.status(404).send('Person not found.');
+        }
+
+        // Pass fetched data to EJS template
+        res.render('edit', { data: results }); 
     });
 });
 
-// Route for edit page POST
-app.put('/:id/edit', (req, res) => {
+// Route for edit submission (Matches the EJS form action path)
+app.put('/:id', (req, res) => {
     const service_number = req.params.id;
     const { grade, name } = req.body;
-    console.log(service_number)
-    console.log({ grade, name })
-    // const { service_number, grade, name } = req.body;
-
-    // Basic validation (add more robust validation as needed)
-    // if (!service_number || !grade || !name) {
-    //     return res.send('All fields are required.');
-    // }
 
     const query = 'UPDATE personnel SET grade = ?, name = ? WHERE service_number = ?';
     pool.query(query, [grade, name, service_number], (err, result) => {
         if (err) {
-            console.error('PUT Error inserting person:', err);
-            return res.send('Error adding person.');
+            console.error('PUT Error updating person:', err);
+            return res.status(500).send('Error updating person.');
         }
-        console.log('person added successfully:', result.insertId);
-        res.redirect('/'); // Redirect to a page displaying all people
+        console.log('Person updated successfully. Affected rows:', result.affectedRows);
+        res.redirect('/'); // Redirect to main list
     });
 });
+
+// // Route to edit page
+// app.get('/:id/edit', (req, res) => {
+//     pool.query('SELECT * FROM personnel WHERE service_number = ?', (error, results) => { // Replace 'your_table_name'
+//         if (error) {
+//             console.error('Error fetching data:', error);
+//             return res.status(500).send('Error fetching data from database.');
+//         }
+//         res.render('edit', { data: results, urlstring: Number(res.locals.currentUrl.substr(1,8)) }); // Pass fetched data to EJS template
+//         // console.log("urlstring is:")
+//         // console.log(Number(res.locals.currentUrl.substr(1,8)))
+//         // console.log("row[0] is:")
+//         // console.log(results[0].service_number)
+//     });
+// });
+
+// // Route for edit page POST
+// app.put('/:id/edit', (req, res) => {
+//     const service_number = req.params.id;
+//     const { grade, name } = req.body;
+//     console.log(service_number)
+//     console.log({ grade, name })
+//     // const { service_number, grade, name } = req.body;
+
+//     // Basic validation (add more robust validation as needed)
+//     // if (!service_number || !grade || !name) {
+//     //     return res.send('All fields are required.');
+//     // }
+
+//     const query = 'UPDATE personnel SET grade = ?, name = ? WHERE service_number = ?';
+//     pool.query(query, [grade, name, service_number], (err, result) => {
+//         if (err) {
+//             console.error('PUT Error inserting person:', err);
+//             return res.send('Error adding person.');
+//         }
+//         console.log('person added successfully:', result.insertId);
+//         res.redirect('/'); // Redirect to a page displaying all people
+//     });
+// });
 
 // Route to ARE YOU SURE delete page
 app.get('/:id/delete', (req, res) => {
