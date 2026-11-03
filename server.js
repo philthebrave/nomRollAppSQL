@@ -166,7 +166,7 @@ app.post('/', (req, res) => {
 
 // Route to edit page
 app.get('/:id/edit', (req, res) => {
-    pool.query('SELECT * FROM personnel', (error, results) => { // Replace 'your_table_name'
+    pool.query('SELECT * FROM personnel WHERE service_number = ?', (error, results) => { // Replace 'your_table_name'
         if (error) {
             console.error('Error fetching data:', error);
             return res.status(500).send('Error fetching data from database.');
