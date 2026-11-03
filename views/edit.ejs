@@ -27,7 +27,38 @@
 </head>
 <!-- ------------------------------------------------- -->
 <body>
-
+        <h1>Edit the person below:</h1>
+        <%= data[0].grade + " " + data[0].name %>
+        <br><br>
+        <form method="POST" action="/<%= data[0].service_number %>?_method=PUT">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Service Number</th>
+                        <th>Grade</th>
+                        <th>Name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <input type="text" name="service_number" value="<%= record.service_number %>" required>
+                        </td>
+                        <td>
+                            <input type="text" name="grade" value="<%= record.grade %>" required>
+                        </td>
+                        <td>
+                            <input type="text" name="name" value="<%= record.name %>" required>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <br><br>
+            <div class="button-group">
+                <button type="submit" class="btn-confirm">Confirm</button>
+                <a href="/" class="btn-cancel">Cancel</a>
+            </div>
+        </form>
 <br><br><br><br><br><br><br><br><br><br>
 <!-- ------------------------------------------------- -->
     <h1>Data from MySQL Personnel Table</h1>
