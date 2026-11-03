@@ -182,7 +182,7 @@ app.get('/:id/edit', (req, res) => {
 });
 
 // Route for edit page POST
-app.put('/:id/edit', (req, res) => {
+app.put('/:id', (req, res) => {
     const service_number = req.params.id;
     const { grade, name } = req.body;
     console.log(service_number)
