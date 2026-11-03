@@ -42,13 +42,13 @@
                 <tbody>
                     <tr>
                         <td>
-                            <input type="text" name="service_number" value="<%= record.service_number %>" required>
+                            <input type="text" name="service_number" value="<%= data[0].service_number %>" required>
                         </td>
                         <td>
-                            <input type="text" name="grade" value="<%= record.grade %>" required>
+                            <input type="text" name="grade" value="<%= data[0].grade %>" required>
                         </td>
                         <td>
-                            <input type="text" name="name" value="<%= record.name %>" required>
+                            <input type="text" name="name" value="<%= data[0].name %>" required>
                         </td>
                     </tr>
                 </tbody>
@@ -61,55 +61,6 @@
         </form>
 <br><br><br><br><br><br><br><br><br><br>
 <!-- ------------------------------------------------- -->
-    <h1>Data from MySQL Personnel Table</h1>
-    <% if (data && data.length > 0) { %>
-        <table>
-            <thead>
-                <tr>
-                    <% Object.keys(data[0]).forEach(key => { %>
-                        <th><%= key %></th>
-                    <% }); %>
-                    <th>Accept</th>
-                    <th>Cancel</th>
-                </tr>
-            </thead>
-            <tbody>
-                <% data.forEach(row => { %>
-                <!-- ------------------------------------------------- -->
-                <% if (urlstring === row.service_number) { %>
-                <!-- HTML or EJS code to be rendered if the condition is true -->
-                    <!-- <form action="/" method="PUT"> -->
-                    
 
-                    <tr>
-                        <form action="/<%= row.service_number %>/edit?_method=PUT" method="POST">
-                            <td><%=row.service_number%></td>
-                            <td><input style="text-align: center;" type="text" name="grade" value="<%=row.grade%>" required></td>
-                            <td><input style="text-align: center;" type="text" name="name" value="<%=row.name%>" required></td>
-                            <td><button type="submit">ACCEPT</button></td>
-                        </form>
-                        <form action="/">
-                            <td><button>CANCEL</button></td>
-                        </form>
-                    </tr>
-                    
-                <% } else { %>
-                <!-- ------------------------------------------------- -->
-                    <tr>
-                        <% Object.values(row).forEach(value => { %>
-                            <td><%= value %></td>
-                        <% }); %>
-                <!-- ------------------------------------------------- -->
-                        <td><button disabled>ACCEPT</button></td>
-                <!-- ------------------------------------------------- -->
-                        <td><button disabled>CANCEL</button></td>
-                    </tr>
-                      <% } %>
-                <% }); %>
-            </tbody>
-        </table>
-    <% } else { %>
-        <p>No data found in the table.</p>
-    <% } %>
 </body>
 </html>
